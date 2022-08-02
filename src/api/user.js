@@ -23,3 +23,14 @@ import request from '@/utils/request'
         data,
     })
 }
+
+/**
+ * 获取用户基本信息
+ * @param {object} id 用户id 
+ * @returns 
+ */
+export function getUserInfoApi(id) {
+    return request({
+        url: `/user-service/user/${id}`,
+    })
+}
