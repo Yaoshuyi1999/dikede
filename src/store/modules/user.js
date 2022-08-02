@@ -9,12 +9,6 @@ export default {
     imgUrl:'',
   },
   mutations: {
-    setNumber(state){
-      function getRandom(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min //含最大值，含最小值
-      }
-      state.clientToken=getRandom(0, 10000)
-    },
     setCode(state, payload){
       state.imgUrl= payload
     },
@@ -23,10 +17,6 @@ export default {
     },
   },
   actions: {
-    // 改变随机数
-    getNumber(context){
-      context.commit('setNumber')
-    },
     // 图片验证码
     async getCode(context,payload){
       const res=await loginCode(payload)
@@ -36,14 +26,8 @@ export default {
     // 登录
     async getToken(context,payload){
       const res=await login(payload)
-      console.log(res);
-      if(res.data.success){
-        context.commit('setToken', res.data.token)
-        router.push('/')
-        Message.success(res.data.msg)
-      }else{
-        Message.error(res.data.msg)
-      }
+      // console.log(res);
+      context.commit('setToken', res.token)
     },
   }
 }

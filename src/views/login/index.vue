@@ -47,15 +47,21 @@
               placeholder="请输入验证码"
             ></el-input>
           </el-col>
-          <el-col :span="7"
-            ><img :src="$store.state.user.imgUrl" alt="" @click="clickCode"
-          /></el-col>
+          <el-col :span="7">
+            <img
+              :src="$store.state.user.imgUrl"
+              alt=""
+              @click="clickCode"
+              class="code-img"
+            />
+          </el-col>
         </el-row>
       </el-form-item>
 
       <el-button
         type="primary"
         style="width: 100%; margin-bottom: 30px"
+        :loading="isLogin"
         @click="login"
         >登录</el-button
       >
@@ -72,25 +78,28 @@ export default {
         loginName: "admin",
         password: "admin",
         code: "",
-        clientToken: this.$store.state.user.clientToken,
+        clientToken: this.getRandom(0, 10000),
         loginType: 0,
       },
       passwordType: "password",
       loginRules: {
         loginName: [{ required: true, trigger: "blur", message: "请输入账号" }],
         password: [{ required: true, trigger: "blur", message: "请输入密码" }],
+        code: [{ required: true, trigger: "blur", message: "请输入验证码" }],
       },
+      isLogin:false,
     };
   },
   created() {
     this.clickCode();
   },
   methods: {
+    getRandom(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min //含最大值，含最小值
+      },
     // 点击图片验证码
     clickCode() {
-      this.$store.dispatch("user/getNumber");
-      // console.log(this.$store.state.user.clientToken)
-      this.loginForm.clientToken = this.$store.state.user.clientToken;
+      this.loginForm.clientToken=this.getRandom(0, 10000)
       this.$store.dispatch("user/getCode", this.loginForm.clientToken);
     },
     // 密码框的显示和隐藏
@@ -106,8 +115,15 @@ export default {
     },
     // 点击登录效果
     async login() {
-      await this.$refs.loginForm.validate();
-      this.$store.dispatch("user/getToken", this.loginForm);
+      this.isLogin=true
+      try{
+        await this.$refs.loginForm.validate();
+        await this.$store.dispatch("user/getToken", this.loginForm);
+        this.$router.push('/')
+        this.$message.success('登录成功')
+      }finally{
+        this.isLogin=false
+      }
     },
   },
 };
@@ -200,7 +216,7 @@ $light_gray: #eee;
   .el-form-item {
     width: 100%;
     height: 52px;
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
     background: #fff;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
@@ -232,6 +248,13 @@ $light_gray: #eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .code-img {
+    height: 50px;
+  }
+  .el-col {
+    height: 50px;
   }
 }
 </style>
