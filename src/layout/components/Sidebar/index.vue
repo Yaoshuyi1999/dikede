@@ -4,9 +4,8 @@
       <el-menu
         :default-active="activeMenu"
         :background-color="'#fff'"
-        :text-color="'#000000'"
         :unique-opened="false"
-        :active-text-color="'rgb(95, 132, 255)'"
+        :active-text-color="'#409EFF'"
         :collapse-transition="false"
         mode="vertical"
       >
