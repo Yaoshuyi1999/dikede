@@ -7,11 +7,9 @@ router.beforeEach((to, from, next) => {
     const token=store.state.user.token
     //如果token存在的话，为登录状态
     if(token){
-        // console.log(2)
-        // if(!store.state.user.userId){
-        //     console.log(1)
+        if(!store.state.user.userInfo.userName){
             store.dispatch('user/getUserInfo',store.state.user.userId)
-        // }
+        }
         // 是否是跳转到登录页面
         if(to.path==='/login'){
             //是，则跳到首页

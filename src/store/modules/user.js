@@ -1,12 +1,13 @@
 import {login,loginCode,getUserInfoApi} from '@/api/user'
-import router from '@/router'
-import { Message } from 'element-ui';
+// import router from '@/router'
+// import { Message } from 'element-ui';
 export default {
   namespaced: true,
   state: {
     token:'',
     imgUrl:'',
-    userId:''
+    userId:'',
+    userInfo:{}
   },
   mutations: {
     setCode(state, payload){
@@ -17,6 +18,9 @@ export default {
     },
     setUserId(state, payload) {
       state.userId = payload
+    },
+    setUserInfo(state, payload) {
+      state.userInfo = payload
     },
   },
   actions: {
@@ -30,14 +34,14 @@ export default {
     async getToken(context,payload){
       const res=await login(payload)
       // console.log(res);
-      context.commit('setToken', res.data.token)
-      context.commit('setUserId',res.data.userId)
+      context.commit('setToken', res.token)
+      context.commit('setUserId',res.userId)
     },
     // 获取用户信息
     async getUserInfo(context,payload){
       const res=await getUserInfoApi(payload)
       console.log(res)
-      // context.commit('setUserInfo',{...userBaseInfo,...userInfo})
+      context.commit('setUserInfo',res)
     }
   }
 }
