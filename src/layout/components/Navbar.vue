@@ -2,7 +2,11 @@
   <div class="navbar">
     <img src="@/assets/images/home-logo.png" alt="" width="88" />
     <div class="right-menu">
-      <img :src="$store.state.user.userInfo.image" class="user-avatar" />
+      <img
+        :src="$store.state.user.userInfo.image + '1'"
+        class="user-avatar"
+        v-imgError="defaultImg"
+      />
       <div class="menu-text">
         欢迎您， {{ $store.state.user.userInfo.userName }}
       </div>
@@ -15,7 +19,13 @@
 </template>
 
 <script>
+import defaultImg from "@/assets/images/head.jpg";
 export default {
+  data() {
+    return {
+      defaultImg,
+    };
+  },
   methods: {
     // 退出按钮
     async logout() {

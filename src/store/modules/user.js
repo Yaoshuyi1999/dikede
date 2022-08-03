@@ -1,4 +1,5 @@
 import {login,loginCode,getUserInfoApi} from '@/api/user'
+import { setToken,setTokenTime } from '@/utils/auth'
 // import router from '@/router'
 // import { Message } from 'element-ui';
 export default {
@@ -36,12 +37,18 @@ export default {
       // console.log(res);
       context.commit('setToken', res.token)
       context.commit('setUserId',res.userId)
+      setTokenTime()
     },
     // 获取用户信息
     async getUserInfo(context,payload){
       const res=await getUserInfoApi(payload)
       console.log(res)
       context.commit('setUserInfo',res)
+    },
+    // 退出
+    logout(context){
+      context.commit('setToken', '')
+      context.commit('setUserInfo',{})
     }
   }
 }
