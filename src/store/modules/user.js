@@ -42,7 +42,7 @@ export default {
     // 获取用户信息
     async getUserInfo(context,payload){
       const res=await getUserInfoApi(payload)
-      console.log(res)
+      // console.log(res)
       context.commit('setUserInfo',res)
     },
     // 退出

@@ -15,7 +15,7 @@ export default {
     {
       path: 'operate',
       name:'operate',
-      component: () => import('@/views/workOrder/operate'),
+      component: () => import('@/views/workOrder/operate/index.vue'),
       meta: { title: '运维工单' }
     }
   ]

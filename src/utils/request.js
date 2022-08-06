@@ -42,7 +42,7 @@ service.interceptors.response.use((res)=>{
     // 请求成功的情况
     const {success,msg,status}=res.data
     // 请求成功，逻辑也成功的情况
-    if(success||status){
+    if(success||status||res.status===200){
         return res.data
     }
     // 请求成功但是逻辑错误的情况
