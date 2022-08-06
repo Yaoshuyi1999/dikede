@@ -11,7 +11,8 @@
         fontWeight: '500',
       }"
     >
-      <el-table-column type="index" label="序号"> </el-table-column>
+      <el-table-column type="index" :index="indexMethod" label="序号">
+      </el-table-column>
       <el-table-column
         :prop="item.prop"
         :label="item.label"
@@ -37,6 +38,10 @@ export default {
       type: Array,
       default: [],
     },
+    getSearchInfo: {
+      type: Object,
+      default: {},
+    },
   },
   data() {
     return {};
@@ -47,6 +52,9 @@ export default {
   methods: {
     handleCurrentChange(val) {
       this.currentRow = val;
+    },
+    indexMethod(index) {
+      return (this.getSearchInfo.pageIndex - 1) * 10 + index + 1;
     },
   },
 };

@@ -5,7 +5,7 @@
         <el-input v-model="formInline.number" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item :label="text2" v-if="text2 !== ''">
-        <el-select v-model="formInline.state" placeholder="请选择">
+        <el-select v-model="formInline.status" placeholder="请选择">
           <el-option
             :label="item.statusName"
             :value="item.statusId"
@@ -15,16 +15,21 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button class="search_btn" @click="onSearch" icon="el-icon-search"
-          >查询</el-button
-        >
+        <viewsButton type="default" @click="clickSearch">
+          <i class="el-icon-search"></i>
+          查询
+        </viewsButton>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import viewsButton from "@/components/viewsButton";
 export default {
+  components: {
+    viewsButton,
+  },
   props: {
     text1: {
       type: String,
@@ -43,7 +48,7 @@ export default {
     return {
       formInline: {
         number: "",
-        state: "",
+        status: "",
       },
     };
   },
@@ -51,8 +56,9 @@ export default {
   created() {},
 
   methods: {
-    onSearch() {
+    clickSearch() {
       console.log("查询");
+      this.$emit("search", this.formInline);
     },
   },
 };

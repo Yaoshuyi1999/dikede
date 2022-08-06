@@ -1,7 +1,7 @@
 <template>
-  <div :class="[type, size]" class="btn" @click="$emit('click')">
+  <el-button :class="[type, size]" class="btn" @click="$emit('click')" :disabled='disabled'>
     <slot></slot>
-  </div>
+  </el-button>
 </template>
 
 <script>
@@ -12,12 +12,16 @@ export default {
   props: {
     type: {
       type: String,
-      default: "default",
+      default: "",
     },
     size: {
       type: String,
-      default: "large",
+      default: "",
     },
+    disabled:{
+      type: Boolean,
+      default: false,
+    }
   },
   created() {},
 
@@ -27,8 +31,8 @@ export default {
 
 <style scoped>
 .btn {
-  width: 100px;
-  height: 40px;
+  width: 80px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,20 +40,35 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
-div {
+.el-button {
   background-color: #eee;
   color: #000;
+  border: none;
 }
+/* type */
 .default {
-  background-color: #eee;
-  color: #000;
+  background-color: #5f84ff;
+  color: #fff;
 }
 .success {
-  background-color: blue;
+  background: linear-gradient(135deg, #ff9743, #ff5e20) !important;
   color: white;
 }
-.mini {
-  width: 50px;
-  height: 30px;
+.warning {
+  background-color: #fbf4f0;
+  color: #655b56;
+}
+.info {
+  background-color: #fff;
+  color: #5f84ff;
+}
+.primary{
+  background-color: #d5ddf8;
+  color: #606266;
+}
+/* size */
+.small {
+  width: 70px;
+  height: 32px;
 }
 </style>

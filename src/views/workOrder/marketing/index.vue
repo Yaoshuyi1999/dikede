@@ -5,37 +5,44 @@
       text1="工单编号"
       text2="工单状态"
       :allTaskStatusList="allTaskStatusList"
+      @search="searchForm"
     ></viewsSearch>
     <!-- 下边的整个表格 -->
     <div class="result">
       <!-- 按钮 -->
       <div class="bottom_button">
-        <el-button
-          icon="el-icon-circle-plus-outline"
-          class="add_btn"
-          @click="onAdd"
-          >新建</el-button
-        >
-        <el-button class="set_btn" @click="onSet">工单配置</el-button>
+        <viewsButton @click="onAdd" type="success">
+          <i class="el-icon-circle-plus-outline"></i>
+          新建
+        </viewsButton>
+        <viewsButton @click="onSet" type="warning">工单配置</viewsButton>
       </div>
       <!-- 表格 -->
       <viewsForm
         :getSearchList="getSearchList"
         :tableHead="tableHead"
+        :getSearchInfo="getSearchInfo"
       >
-      <el-button @click="onSet">查看详情</el-button>
+        <viewsButton @click="onMore" type="info">查看详情</viewsButton>
       </viewsForm>
       <!-- 分页 -->
-      <viewsPage :getSearchInfo="getSearchInfo"></viewsPage>
+      <viewsPage
+        :getSearchInfo="getSearchInfo"
+        @pageIndex="allTask"
+        :disabledUp="disabledUp"
+        :disabledDown="disabledDown"
+      ></viewsPage>
     </div>
   </div>
 </template>
 
 <script>
+import moment from "moment";
 import { allTaskStatus, getSearch } from "@/api/workOrder";
 import viewsSearch from "@/components/viewsSearch";
 import viewsForm from "@/components/viewsForm";
 import viewsPage from "@/components/viewsPage";
+import viewsButton from "@/components/viewsButton";
 export default {
   name: "marketing",
   data() {
@@ -73,16 +80,25 @@ export default {
       allTaskStatusList: [],
       getSearchList: [],
       getSearchInfo: {},
+      disabledUp: false,
+      disabledDown: false,
+      params: {
+        pageIndex: 1,
+        number: "",
+        status: "",
+      },
     };
   },
   components: {
     viewsSearch,
     viewsForm,
     viewsPage,
+    viewsButton,
   },
 
   created() {
-    this.allTask();
+    this.allTaskStatus();
+    this.allTask(1);
   },
 
   methods: {
@@ -92,15 +108,57 @@ export default {
     onSet() {
       console.log("配置");
     },
-    async allTask() {
+    onMore() {
+      console.log("详情");
+    },
+    searchForm(formInline) {
+      this.params.number = formInline.number;
+      this.params.status = formInline.status;
+      this.allTask(1);
+    },
+    // 初始获取页面内容
+    async allTaskStatus() {
       const resStatus = await allTaskStatus();
       this.allTaskStatusList = resStatus;
       //   console.log(this.allTaskStatusList);
-      const resSearch = await getSearch();
-      console.log(resSearch);
+    },
+    async allTask(pageIndex) {
+      // console.log(pageIndex);
+      // console.log(this.$refs.searchForm.formInline);
+      this.params.pageIndex = pageIndex;
+      // console.log(this.params);
+      const resSearch = await getSearch(this.params);
+      // console.log(resSearch);
       this.getSearchInfo = resSearch;
       this.getSearchList = resSearch.currentPageRecords;
-      console.log(this.getSearchList);
+      if (resSearch.pageIndex == 1) {
+        this.disabledUp = true;
+      } else {
+        this.disabledUp = false;
+      }
+      if (resSearch.pageIndex == resSearch.totalPage) {
+        this.disabledDown = true;
+      } else {
+        this.disabledDown = false;
+      }
+      // console.log(this.getSearchList);
+      this.changeFormat(this.getSearchList);
+    },
+    // 对获取的数据进行格式修改
+    changeFormat(getSearchList) {
+      // console.log(getSearchList);
+      this.getSearchList = getSearchList.map((value, index, array) => {
+        // console.log(value.createType);
+        if (value.createType === 1) {
+          value.createType = "手动";
+        } else {
+          value.createType = "自动";
+        }
+        value.createTime = moment(value.createTime).format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
+        return value;
+      });
     },
   },
 };
@@ -112,16 +170,7 @@ export default {
   background-color: #fff;
   .bottom_button {
     margin-bottom: 20px;
-    .add_btn {
-      background: linear-gradient(135deg, #ff9743, #ff5e20);
-      color: #fff;
-      border: none;
-    }
-    .set_btn {
-      background-color: #fbf4f0;
-      border: none;
-      color: #655b56;
-    }
+    display: flex;
   }
 }
 </style>

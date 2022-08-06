@@ -21,10 +21,3 @@ export function getSearch(params) {
         params
     })
 }
-
-
-// export function allTaskStatus() {
-//     return request({
-//         url: 'task-service/task/allTaskStatus',
-//     })
-// }

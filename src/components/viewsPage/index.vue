@@ -6,18 +6,42 @@
       }}/{{ getSearchInfo.totalPage }}页
     </div>
     <div class="page_right">
-      <el-button class="page_btn" @click="onPageUp">上一页</el-button>
-      <el-button class="page_btn" @click="onNextPage">下一页</el-button>
+      <viewsButton
+        @click="onPageUp"
+        size="small"
+        type="primary"
+        :disabled="disabledUp"
+        >上一页</viewsButton
+      >
+      <viewsButton
+        @click="onNextPage"
+        size="small"
+        type="primary"
+        :disabled="disabledDown"
+        >下一页</viewsButton
+      >
     </div>
   </div>
 </template>
 
 <script>
+import viewsButton from "@/components/viewsButton";
 export default {
+  components: {
+    viewsButton,
+  },
   props: {
     getSearchInfo: {
       type: Object,
       default: {},
+    },
+    disabledUp: {
+      type: Boolean,
+      default: true,
+    },
+    disabledDown: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -27,26 +51,25 @@ export default {
   created() {},
 
   methods: {
-    onPageUp(){
-        console.log('上一页');
+    onPageUp() {
+      const pageIndex = --this.getSearchInfo.pageIndex;
+      this.$emit("pageIndex", pageIndex);
     },
-    onNextPage(){
-        console.log('下一页');
-    }
+    onNextPage() {
+      const pageIndex = ++this.getSearchInfo.pageIndex;
+      this.$emit("pageIndex", pageIndex);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.pagination{
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  padding: 32px 16px;
+  .page_right {
     display: flex;
-    justify-content: space-between;
-    padding: 32px 16px;
-}
-.page_btn {
-  width: 70px;
-  height: 32px;
-  background-color: #d5ddf8;
-  padding: 0;
+  }
 }
 </style>
